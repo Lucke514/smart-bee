@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model alerta {
+  id          String        @id @db.VarChar(12)
+  nombre      String        @db.VarChar(100)
+  indicador   String        @db.VarChar(64)
+  descripcion String        @db.VarChar(256)
+  nodo_alerta nodo_alerta[]
+}
+
+model colmena {
+  id           String         @id @db.VarChar(64)
+  descripcion  String         @db.VarChar(1024)
+  latitud      Decimal        @db.Decimal(10, 7)
+  longitud     Decimal        @db.Decimal(10, 7)
+  dueno        String         @db.VarChar(16)
+  usuario      usuario        @relation(fields: [dueno], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "colmena_FK")
+  nodo_colmena nodo_colmena[]
+
+  @@index([dueno], map: "colmena_FK")
+}
+
+model estacion {
+  id            String          @id @db.VarChar(64)
+  descripcion   String          @db.VarChar(1024)
+  latitud       Decimal         @db.Decimal(10, 7)
+  longitud      Decimal         @db.Decimal(10, 7)
+  dueno         String          @db.VarChar(16)
+  usuario       usuario         @relation(fields: [dueno], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "estacion_FK")
+  nodo_estacion nodo_estacion[]
+
+  @@index([dueno], map: "estacion_FK")
+}
+
+model nodo {
+  id            String          @id @db.VarChar(64)
+  descripcion   String          @db.VarChar(1024)
+  tipo          String          @db.VarChar(12)
+  nodo_tipo     nodo_tipo       @relation(fields: [tipo], references: [tipo], onDelete: NoAction, onUpdate: NoAction, map: "nodo_FK")
+  nodo_alerta   nodo_alerta[]
+  nodo_colmena  nodo_colmena[]
+  nodo_estacion nodo_estacion[]
+  nodo_mensaje  nodo_mensaje[]
+
+  @@index([tipo], map: "nodo_FK")
+}
+
+model nodo_alerta {
+  id        Int      @id @default(autoincrement()) @db.UnsignedInt
+  nodo_id   String   @db.VarChar(64)
+  alerta_id String   @db.VarChar(12)
+  fecha     DateTime @default(now()) @db.Timestamp(3)
+  nodo      nodo     @relation(fields: [nodo_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "nodo_alerta_FK")
+  alerta    alerta   @relation(fields: [alerta_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "nodo_alerta_alerta_FK")
+
+  @@index([nodo_id], map: "nodo_alerta_FK")
+  @@index([alerta_id], map: "nodo_alerta_alerta_id_IDX")
+  @@index([fecha], map: "nodo_alerta_fecha_IDX")
+}
+
+model nodo_colmena {
+  id         Int     @id @default(autoincrement()) @db.UnsignedInt
+  colmena_id String  @db.VarChar(64)
+  nodo_id    String  @db.VarChar(64)
+  nodo       nodo    @relation(fields: [nodo_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "nodo_colmena_FK")
+  colmena    colmena @relation(fields: [colmena_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "nodo_colmena_FK_1")
+
+  @@index([nodo_id], map: "nodo_colmena_FK")
+  @@index([colmena_id], map: "nodo_colmena_FK_1")
+}
+
+model nodo_estacion {
+  id          Int      @id @default(autoincrement()) @db.UnsignedInt
+  estacion_id String   @db.VarChar(64)
+  nodo_id     String   @db.VarChar(64)
+  nodo        nodo     @relation(fields: [nodo_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "nodo_estacion_FK")
+  estacion    estacion @relation(fields: [estacion_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "nodo_estacion_FK_1")
+
+  @@index([nodo_id], map: "nodo_estacion_FK")
+  @@index([estacion_id], map: "nodo_estacion_FK_1")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model nodo_mensaje {
+  id      Int      @id @default(autoincrement()) @db.UnsignedInt
+  nodo_id String   @db.VarChar(64)
+  topico  String   @db.VarChar(255)
+  payload String   @db.LongText
+  fecha   DateTime @default(now()) @db.Timestamp(3)
+  nodo    nodo     @relation(fields: [nodo_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "mensaje_FK")
+
+  @@index([nodo_id], map: "mensaje_FK")
+  @@index([fecha], map: "mensaje_fecha_IDX")
+}
+
+model nodo_tipo {
+  tipo        String @id @db.VarChar(12)
+  descripcion String @db.VarChar(64)
+  nodo        nodo[]
+}
+
+model rol {
+  rol                      String    @id @db.VarChar(12)
+  descripcion              String    @db.VarChar(64)
+  usuario_usuario_rolTorol usuario[] @relation("usuario_rolTorol")
+}
+
+model usuario {
+  id                   String     @id @db.VarChar(16)
+  clave                String     @db.VarChar(64)
+  nombre               String     @db.VarChar(100)
+  apellido             String     @db.VarChar(100)
+  comuna               String     @db.VarChar(100)
+  rol                  String?    @db.VarChar(12)
+  activo               Boolean    @default(true)
+  colmena              colmena[]
+  estacion             estacion[]
+  rol_usuario_rolTorol rol?       @relation("usuario_rolTorol", fields: [rol], references: [rol], onDelete: NoAction, onUpdate: NoAction, map: "usuario_FK")
+
+  @@index([rol], map: "usuario_FK")
+}
