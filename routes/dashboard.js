@@ -235,7 +235,8 @@ router.get('/', async (req, res) => {
       nodosPorTipo: processNodosPorTipo(nodosPorTipo, userId),
       mensajesPorDia: processMensajesPorDia(mensajesUltimos7Dias),
       alertasPorDia: processAlertasPorDia(alertasUltimos30Dias),
-      distribucionNodos: processDistribucionNodos(colmenasData, estacionesData)
+      distribucionNodos: processDistribucionNodos(colmenasData, estacionesData),
+      temperaturasColmenas: processTemperaturasColmenas(datosTemperaturaColmenas)
     };
 
     res.render('dashboard/index', {
@@ -362,6 +363,30 @@ function processDistribucionNodos(colmenas, estaciones) {
   };
 }
 
+function processTemperaturasColmenas(colmenasData) {
+  const colmenasConTemperatura = colmenasData.filter(colmena => 
+    colmena.temperaturaInterna !== null || colmena.temperaturaExterna !== null
+  );
+
+  if (colmenasConTemperatura.length === 0) {
+    return {
+      labels: [],
+      temperaturaInterna: [],
+      temperaturaExterna: []
+    };
+  }
+
+  const labels = colmenasConTemperatura.map(colmena => colmena.descripcion || `Colmena ${colmena.id}`);
+  const temperaturaInterna = colmenasConTemperatura.map(colmena => colmena.temperaturaInterna || 0);
+  const temperaturaExterna = colmenasConTemperatura.map(colmena => colmena.temperaturaExterna || 0);
+
+  return {
+    labels,
+    temperaturaInterna,
+    temperaturaExterna
+  };
+}
+
 // GET /dashboard/profile - Vista del perfil del usuario (solo lectura)
 router.get('/profile', (req, res) => {
   res.render('dashboard/profile', {
@@ -380,7 +405,8 @@ router.get('/api/chart-data', async (req, res) => {
       mensajesUltimos7Dias,
       nodosPorTipo,
       colmenasData,
-      estacionesData
+      estacionesData,
+      datosTemperaturaColmenas
     ] = await Promise.all([
       // Alertas de los últimos 30 días
       prisma.nodo_alerta.findMany({
@@ -447,25 +473,40 @@ router.get('/api/chart-data', async (req, res) => {
         }
       }),
 
-      // Nodos por tipo
-      prisma.nodo_tipo.findMany({
-        include: {
-          nodo: {
-            include: {
+      // Nodos por tipo - obtener directamente los nodos del usuario
+      prisma.nodo.findMany({
+        where: {
+          OR: [
+            {
               nodo_colmena: {
-                include: {
+                some: {
                   colmena: {
-                    where: { dueno: userId }
-                  }
-                }
-              },
-              nodo_estacion: {
-                include: {
-                  estacion: {
-                    where: { dueno: userId }
+                    dueno: userId
                   }
                 }
               }
+            },
+            {
+              nodo_estacion: {
+                some: {
+                  estacion: {
+                    dueno: userId
+                  }
+                }
+              }
+            }
+          ]
+        },
+        include: {
+          nodo_tipo: true,
+          nodo_colmena: {
+            include: {
+              colmena: true
+            }
+          },
+          nodo_estacion: {
+            include: {
+              estacion: true
             }
           }
         }
@@ -501,7 +542,10 @@ router.get('/api/chart-data', async (req, res) => {
             }
           }
         }
-      })
+      }),
+
+      // Obtener datos de temperatura más recientes para cada colmena
+      getLatestTemperatureData(userId)
     ]);
 
     // Procesar datos para gráficos
@@ -510,7 +554,8 @@ router.get('/api/chart-data', async (req, res) => {
       nodosPorTipo: processNodosPorTipo(nodosPorTipo, userId),
       mensajesPorDia: processMensajesPorDia(mensajesUltimos7Dias),
       alertasPorDia: processAlertasPorDia(alertasUltimos30Dias),
-      distribucionNodos: processDistribucionNodos(colmenasData, estacionesData)
+      distribucionNodos: processDistribucionNodos(colmenasData, estacionesData),
+      temperaturasColmenas: processTemperaturasColmenas(datosTemperaturaColmenas)
     };
 
     res.json(chartData);

@@ -410,6 +410,19 @@
                 </div>
             </div>
 
+            <!-- Gráfico de Temperaturas de Colmenas -->
+            <div class="bg-white shadow-lg rounded-xl border border-gray-100 mb-8">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-medium text-gray-900">
+                        <i class="fas fa-thermometer-half text-red-500 mr-2"></i>
+                        Temperaturas Actuales de Colmenas
+                    </h3>
+                </div>
+                <div class="p-6">
+                    <canvas id="temperaturasChart" width="400" height="300"></canvas>
+                </div>
+            </div>
+
             <!-- Recent Activity -->
             <div class="bg-white shadow-lg rounded-xl border border-gray-100">
                 <div class="px-6 py-4 border-b border-gray-200">
@@ -468,8 +481,7 @@
         let charts = {}; // Almacenar instancias de gráficos
 
         function initializeCharts() {
-            // Obtener datos del gráfico del servidor
-            const chartData = <%- typeof chartData !== 'undefined' ? chartData : '{}' %>;
+            const chartData = <%- typeof chartData !== 'undefined' ? chartData : '{}' %>; 
             createCharts(chartData);
         }
 
@@ -674,6 +686,74 @@
                     }
                 });
             }
+
+            // Gráfico de Temperaturas de Colmenas
+            if (chartData.temperaturasColmenas && chartData.temperaturasColmenas.labels.length > 0) {
+                const ctx5 = document.getElementById('temperaturasChart').getContext('2d');
+                charts.temperaturas = new Chart(ctx5, {
+                    type: 'bar',
+                    data: {
+                        labels: chartData.temperaturasColmenas.labels,
+                        datasets: [{
+                            label: 'Temperatura Interna (°C)',
+                            data: chartData.temperaturasColmenas.temperaturaInterna,
+                            backgroundColor: colors.danger + '80',
+                            borderColor: colors.danger,
+                            borderWidth: 2
+                        }, {
+                            label: 'Temperatura Externa (°C)',
+                            data: chartData.temperaturasColmenas.temperaturaExterna,
+                            backgroundColor: colors.info + '80',
+                            borderColor: colors.info,
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    padding: 20,
+                                    usePointStyle: true
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.dataset.label + ': ' + context.parsed.y.toFixed(1) + '°C';
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Temperatura (°C)'
+                                },
+                                grid: {
+                                    color: '#f3f4f6'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Colmenas'
+                                },
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            } else {
+                // Mostrar mensaje "Sin datos" para temperaturas
+                showNoDataMessage('temperaturasChart', 'fas fa-thermometer-half', 'No hay datos de temperatura disponibles');
+            }
         }
 
         function updateCharts(chartData) {
@@ -752,6 +832,68 @@
                 charts.actividadAlertas.data.labels = chartData.alertasPorDia.labels || [];
                 charts.actividadAlertas.data.datasets[0].data = chartData.alertasPorDia.data || [];
                 charts.actividadAlertas.update();
+            }
+
+            // Update Temperaturas Chart
+            if (chartData.temperaturasColmenas && chartData.temperaturasColmenas.labels.length > 0) {
+                if (charts.temperaturas) {
+                    charts.temperaturas.data.labels = chartData.temperaturasColmenas.labels;
+                    charts.temperaturas.data.datasets[0].data = chartData.temperaturasColmenas.temperaturaInterna;
+                    charts.temperaturas.data.datasets[1].data = chartData.temperaturasColmenas.temperaturaExterna;
+                    charts.temperaturas.update();
+                } else {
+                    // Recreate chart if it didn't exist before
+                    const temperaturasContainer = document.getElementById('temperaturasChart').parentElement;
+                    temperaturasContainer.innerHTML = '<canvas id="temperaturasChart" width="400" height="300"></canvas>';
+                    
+                    const ctx = document.getElementById('temperaturasChart').getContext('2d');
+                    const colors = {
+                        danger: '#EF4444',
+                        info: '#3B82F6'
+                    };
+                    
+                    charts.temperaturas = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: chartData.temperaturasColmenas.labels,
+                            datasets: [{
+                                label: 'Temperatura Interna (°C)',
+                                data: chartData.temperaturasColmenas.temperaturaInterna,
+                                backgroundColor: colors.danger + '80',
+                                borderColor: colors.danger,
+                                borderWidth: 2
+                            }, {
+                                label: 'Temperatura Externa (°C)',
+                                data: chartData.temperaturasColmenas.temperaturaExterna,
+                                backgroundColor: colors.info + '80',
+                                borderColor: colors.info,
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                    labels: {
+                                        padding: 20,
+                                        usePointStyle: true
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Temperatura (°C)'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
             }
         }
 
