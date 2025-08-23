@@ -87,7 +87,7 @@ model nodo_estacion {
   @@index([estacion_id], map: "nodo_estacion_FK_1")
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// Esta tabla contiene restricciones de verificación y requiere configuración adicional para migraciones. Visita https://pris.ly/d/check-constraints para más información.
 model nodo_mensaje {
   id      Int      @id @default(autoincrement()) @db.UnsignedInt
   nodo_id String   @db.VarChar(64)

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'bee-yellow': '#FFD700',
+                        'bee-orange': '#FFA500',
+                        'bee-brown': '#8B4513'
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Flash Messages -->
+    <% if (typeof success !== 'undefined' && success.length > 0) { %>
+        <div id="flash-success" class="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg">
+            <div class="flex items-center">
+                <i class="fas fa-check-circle mr-2"></i>
+                <%= success[0] %>
+                <button onclick="document.getElementById('flash-success').remove()" class="ml-4 text-white hover:text-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    <% } %>
+
+    <% if (typeof error !== 'undefined' && error.length > 0) { %>
+        <div id="flash-error" class="fixed top-4 right-4 z-50 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg">
+            <div class="flex items-center">
+                <i class="fas fa-exclamation-circle mr-2"></i>
+                <%= error[0] %>
+                <button onclick="document.getElementById('flash-error').remove()" class="ml-4 text-white hover:text-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    <% } %>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-bee text-bee-yellow text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-gray-900">Smart Bee</span>
+                    </div>
+                    <div class="hidden md:ml-6 md:flex md:space-x-8">
+                        <a href="/dashboard" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
+                            Dashboard
+                        </a>
+                        <a href="/dashboard/profile" class="border-bee-yellow text-gray-900 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
+                            Mi Perfil
+                        </a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="text-sm text-gray-700">
+                        <span class="font-medium"><%= currentUser.nombre %> <%= currentUser.apellido %></span>
+                        <% if (currentUser.rolDescripcion) { %>
+                            <span class="text-gray-500 ml-1">(<%= currentUser.rolDescripcion %>)</span>
+                        <% } %>
+                    </div>
+                    <div class="relative">
+                        <button id="user-menu-button" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bee-yellow">
+                            <div class="h-8 w-8 bg-bee-yellow rounded-full flex items-center justify-center">
+                                <i class="fas fa-user text-white text-sm"></i>
+                            </div>
+                        </button>
+                        <div id="user-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                            <a href="/dashboard/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-user mr-2"></i> Mi Perfil
+                            </a>
+                            <a href="/auth/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="px-4 py-6 sm:px-0">
+            <div class="flex items-center">
+                <a href="/dashboard" class="text-gray-500 hover:text-gray-700 mr-4">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">Mi Perfil - Vista</h1>
+                    <p class="mt-1 text-sm text-gray-600">
+                        Información de tu cuenta en Smart Bee (solo lectura)
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Content -->
+        <div class="px-4 sm:px-0">
+            <div class="bg-white shadow-lg rounded-xl border border-gray-100 overflow-hidden">
+                <!-- Profile Header -->
+                <div class="bg-gradient-to-r from-bee-yellow to-bee-orange px-6 py-8">
+                    <div class="flex items-center">
+                        <div class="h-20 w-20 bg-white rounded-full flex items-center justify-center shadow-lg">
+                            <i class="fas fa-user text-bee-yellow text-3xl"></i>
+                        </div>
+                        <div class="ml-6 text-white">
+                            <h2 class="text-2xl font-bold"><%= currentUser.nombre %> <%= currentUser.apellido %></h2>
+                            <p class="text-yellow-100 mt-1">
+                                <i class="fas fa-id-badge mr-2"></i>
+                                ID: <%= currentUser.id %>
+                            </p>
+                            <% if (currentUser.rolDescripcion) { %>
+                                <p class="text-yellow-100 mt-1">
+                                    <i class="fas fa-user-tag mr-2"></i>
+                                    <%= currentUser.rolDescripcion %>
+                                </p>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Details -->
+                <div class="px-6 py-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Personal Information -->
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Información Personal</h3>
+                            <div class="space-y-4">
+                                <div class="border border-gray-200 rounded-lg p-4">
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Nombre</label>
+                                    <p class="text-gray-900 font-medium"><%= currentUser.nombre %></p>
+                                </div>
+                                <div class="border border-gray-200 rounded-lg p-4">
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Apellido</label>
+                                    <p class="text-gray-900 font-medium"><%= currentUser.apellido %></p>
+                                </div>
+                                <div class="border border-gray-200 rounded-lg p-4">
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Comuna</label>
+                                    <p class="text-gray-900 font-medium">
+                                        <i class="fas fa-map-marker-alt text-gray-400 mr-2"></i>
+                                        <%= currentUser.comuna %>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Account Information -->
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Información de Cuenta</h3>
+                            <div class="space-y-4">
+                                <div class="border border-gray-200 rounded-lg p-4">
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">ID de Usuario</label>
+                                    <p class="text-gray-900 font-medium font-mono"><%= currentUser.id %></p>
+                                </div>
+                                <div class="border border-gray-200 rounded-lg p-4">
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Rol</label>
+                                    <p class="text-gray-900 font-medium">
+                                        <% if (currentUser.rolDescripcion) { %>
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-bee-yellow text-white">
+                                                <%= currentUser.rolDescripcion %>
+                                            </span>
+                                        <% } else { %>
+                                            <span class="text-gray-500">No asignado</span>
+                                        <% } %>
+                                    </p>
+                                </div>
+                                <div class="border border-gray-200 rounded-lg p-4">
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Estado</label>
+                                    <p class="text-gray-900 font-medium">
+                                        <% if (currentUser.activo) { %>
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                <i class="fas fa-check-circle mr-1"></i>
+                                                Activo
+                                            </span>
+                                        <% } else { %>
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                <i class="fas fa-times-circle mr-1"></i>
+                                                Inactivo
+                                            </span>
+                                        <% } %>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Information Notice -->
+                    <div class="mt-8 pt-6 border-t border-gray-200">
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-info-circle text-blue-400 text-lg"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm text-blue-700">
+                                        <strong>Modo de solo lectura:</strong> Esta información es únicamente para visualización. 
+                                        Para realizar cambios, contacte con el administrador del sistema.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 flex justify-center">
+                            <a href="/auth/logout" class="bg-red-500 hover:bg-red-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 flex items-center">
+                                <i class="fas fa-sign-out-alt mr-2"></i>
+                                Cerrar Sesión
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Auto-hide flash messages
+        setTimeout(() => {
+            const successMsg = document.getElementById('flash-success');
+            const errorMsg = document.getElementById('flash-error');
+            if (successMsg) successMsg.remove();
+            if (errorMsg) errorMsg.remove();
+        }, 5000);
+
+        // User menu dropdown
+        document.addEventListener('DOMContentLoaded', function() {
+            const userMenuButton = document.getElementById('user-menu-button');
+            const userMenu = document.getElementById('user-menu');
+            
+            if (userMenuButton && userMenu) {
+                userMenuButton.addEventListener('click', function() {
+                    userMenu.classList.toggle('hidden');
+                });
+                
+                // Cerrar menú al hacer clic fuera
+                document.addEventListener('click', function(event) {
+                    if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
+                        userMenu.classList.add('hidden');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

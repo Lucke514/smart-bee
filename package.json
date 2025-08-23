@@ -3,6 +3,13 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "start": "npm install && npx prisma generate && node app.js",
+    "dev": "nodemon app.js",
+    "db:generate": "npx prisma generate",
+    "db:push": "npx prisma db push",
+    "db:studio": "npx prisma studio",
+    "create-user": "node scripts/userUtils.js createuser",
+    "hash-password": "node scripts/userUtils.js hash",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,8 +26,14 @@
   "description": "",
   "dependencies": {
     "@prisma/client": "^6.14.0",
+    "bcryptjs": "^3.0.2",
+    "connect-flash": "^0.1.1",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
+    "express-session": "^1.18.2",
     "prisma": "^6.14.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }
