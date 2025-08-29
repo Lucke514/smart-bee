@@ -7,6 +7,7 @@ const { PrismaClient } = require('@prisma/client');
 // Importar rutas
 const authRoutes = require('./routes/auth');
 const dashboardRoutes = require('./routes/dashboard');
+const adminRoutes = require('./routes/admin');
 
 // Importar middleware
 const requireAuth = require('./middleware/requireAuth');
@@ -48,6 +49,7 @@ app.use((req, res, next) => {
 // Rutas
 app.use('/auth', authRoutes);
 app.use('/dashboard', requireAuth, dashboardRoutes);
+app.use('/admin', adminRoutes);
 
 // Ruta principal - redirige al login si no está autenticado
 app.get('/', (req, res) => {
