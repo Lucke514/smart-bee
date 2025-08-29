@@ -55,6 +55,12 @@ router.post('/login', async (req, res) => {
       return res.redirect('/auth/login');
     }
     
+    // Validar si el usuario es ADM se redirige al /admin
+    if (usuario.rol === 'ADM') {
+      req.flash('error', 'Los administradores no pueden iniciar sesión aquí');
+      return res.redirect('/admin')
+    }
+
     // Crear sesión del usuario
     req.session.user = {
       id: usuario.id,

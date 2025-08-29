@@ -596,10 +596,10 @@ async function getLatestTemperatureData(userId) {
       const colmenaInfo = {
         id: colmena.id,
         descripcion: colmena.descripcion,
-        temperaturaInterna: null,
-        temperaturaExterna: null,
-        humedad: null,
-        peso: null,
+        temperaturaInterna: 31,
+        temperaturaExterna: 28,
+        humedad: 60,
+        peso: 1.5,
         ultimaLectura: null,
         estado: 'Sin datos',
         alertas: []

@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
+    <title>
+        <%= title %>
+    </title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
@@ -21,103 +24,118 @@
     </script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
+
 <body class="bg-gray-50 min-h-screen">
     <!-- Flash Messages -->
-    <% if (typeof success !== 'undefined' && success.length > 0) { %>
+    <% if (typeof success !=='undefined' && success.length> 0) { %>
         <div id="flash-success" class="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg">
             <div class="flex items-center">
                 <i class="fas fa-check-circle mr-2"></i>
                 <%= success[0] %>
-                <button onclick="document.getElementById('flash-success').remove()" class="ml-4 text-white hover:text-gray-200">
-                    <i class="fas fa-times"></i>
-                </button>
+                    <button onclick="document.getElementById('flash-success').remove()"
+                        class="ml-4 text-white hover:text-gray-200">
+                        <i class="fas fa-times"></i>
+                    </button>
             </div>
         </div>
-    <% } %>
+        <% } %>
 
-    <% if (typeof error !== 'undefined' && error.length > 0) { %>
-        <div id="flash-error" class="fixed top-4 right-4 z-50 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg">
-            <div class="flex items-center">
-                <i class="fas fa-exclamation-circle mr-2"></i>
-                <%= error[0] %>
-                <button onclick="document.getElementById('flash-error').remove()" class="ml-4 text-white hover:text-gray-200">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        </div>
-    <% } %>
-
-    <!-- Navigation -->
-    <nav class="bg-white shadow-sm border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0 flex items-center">
-                        <i class="fas fa-bee text-bee-yellow text-2xl mr-2"></i>
-                        <span class="text-xl font-bold text-gray-900">Smart Bee</span>
-                    </div>
-                    <div class="hidden md:ml-6 md:flex md:space-x-8">
-                        <a href="/dashboard" class="border-bee-yellow text-gray-900 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
-                            Dashboard
-                        </a>
+            <% if (typeof error !=='undefined' && error.length> 0) { %>
+                <div id="flash-error"
+                    class="fixed top-4 right-4 z-50 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg">
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-circle mr-2"></i>
+                        <%= error[0] %>
+                            <button onclick="document.getElementById('flash-error').remove()"
+                                class="ml-4 text-white hover:text-gray-200">
+                                <i class="fas fa-times"></i>
+                            </button>
                     </div>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <div class="text-sm text-gray-700">
-                        <span class="font-medium"><%= currentUser.nombre %> <%= currentUser.apellido %></span>
-                        <% if (currentUser.rolDescripcion) { %>
-                            <span class="text-gray-500 ml-1">(<%= currentUser.rolDescripcion %>)</span>
-                        <% } %>
-                    </div>
-                    <div class="relative">
-                        <button id="user-menu-button" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bee-yellow">
-                            <div class="h-8 w-8 bg-bee-yellow rounded-full flex items-center justify-center">
-                                <i class="fas fa-user text-white text-sm"></i>
+                <% } %>
+
+                    <!-- Navigation -->
+                    <nav class="bg-white shadow-sm border-b border-gray-200">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div class="flex justify-between h-16">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 flex items-center">
+                                        <i class="fas fa-bee text-bee-yellow text-2xl mr-2"></i>
+                                        <span class="text-xl font-bold text-gray-900">Smart Bee</span>
+                                    </div>
+                                    <div class="hidden md:ml-6 md:flex md:space-x-8">
+                                        <a href="/dashboard"
+                                            class="border-bee-yellow text-gray-900 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
+                                            Dashboard
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <div class="text-sm text-gray-700">
+                                        <span class="font-medium">
+                                            <%= currentUser.nombre %>
+                                                <%= currentUser.apellido %>
+                                        </span>
+                                        <% if (currentUser.rolDescripcion) { %>
+                                            <span class="text-gray-500 ml-1">(<%= currentUser.rolDescripcion %>)</span>
+                                            <% } %>
+                                    </div>
+                                    <div class="relative">
+                                        <button id="user-menu-button"
+                                            class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bee-yellow">
+                                            <div
+                                                class="h-8 w-8 bg-bee-yellow rounded-full flex items-center justify-center">
+                                                <i class="fas fa-user text-white text-sm"></i>
+                                            </div>
+                                        </button>
+                                        <div id="user-menu"
+                                            class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                                            <a href="/dashboard/profile"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                <i class="fas fa-user mr-2"></i> Mi Perfil
+                                            </a>
+                                            <a href="/auth/logout"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                <i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </button>
-                        <div id="user-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-                            <a href="/dashboard/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                <i class="fas fa-user mr-2"></i> Mi Perfil
-                            </a>
-                            <a href="/auth/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                <i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión
-                            </a>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
+                    </nav>
 
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <!-- Header -->
-        <div class="px-4 py-6 sm:px-0">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h1 class="text-3xl font-bold text-gray-900">Dashboard - Visualización</h1>
-                    <p class="mt-1 text-sm text-gray-600">
-                        Bienvenido de vuelta, <%= currentUser.nombre %>. Vista de solo lectura de tu información de apicultura.
-                    </p>
-                </div>
-                <div class="flex items-center space-x-3">
-                    <div class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                        <i class="fas fa-eye text-blue-600 mr-1"></i>
-                        Solo Visualización
-                    </div>
-                    <div class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-                        <i class="fas fa-circle text-green-500 mr-1"></i>
-                        En línea
-                    </div>
-                </div>
-            </div>
-        </div>
+                    <!-- Main Content -->
+                    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+                        <!-- Header -->
+                        <div class="px-4 py-6 sm:px-0">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h1 class="text-3xl font-bold text-gray-900">Dashboard - Visualización</h1>
+                                    <p class="mt-1 text-sm text-gray-600">
+                                        Bienvenido de vuelta, <%= currentUser.nombre %>. Vista de solo lectura de tu
+                                            información de apicultura.
+                                    </p>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <div class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                                        <i class="fas fa-eye text-blue-600 mr-1"></i>
+                                        Solo Visualización
+                                    </div>
+                                    <div class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+                                        <i class="fas fa-circle text-green-500 mr-1"></i>
+                                        En línea
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-        <!-- Stats Grid -->
-        <div class="px-4 sm:px-0">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <!-- Colmenas Card -->
-                <div class="bg-white overflow-hidden shadow-lg rounded-xl border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+                        <!-- Stats Grid -->
+                        <div class="px-4 sm:px-0">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+
+                                <!-- Colmenas Card -->
+                                <!-- <div class="bg-white overflow-hidden shadow-lg rounded-xl border border-gray-100 hover:shadow-xl transition-shadow duration-300">
                     <div class="p-6">
                         <div class="flex items-center">
                             <div class="flex-shrink-0">
@@ -136,10 +154,10 @@
                             </span>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
-                <!-- Estaciones Card -->
-                <div class="bg-white overflow-hidden shadow-lg rounded-xl border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+                                <!-- Estaciones Card -->
+                                <!-- <div class="bg-white overflow-hidden shadow-lg rounded-xl border border-gray-100 hover:shadow-xl transition-shadow duration-300">
                     <div class="p-6">
                         <div class="flex items-center">
                             <div class="flex-shrink-0">
@@ -158,32 +176,36 @@
                             </span>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
-                <!-- Alertas Card -->
-                <div class="bg-white overflow-hidden shadow-lg rounded-xl border border-gray-100 hover:shadow-xl transition-shadow duration-300">
-                    <div class="p-6">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0">
-                                <div class="h-12 w-12 bg-red-500 rounded-lg flex items-center justify-center">
-                                    <i class="fas fa-exclamation-triangle text-white text-xl"></i>
+                                <!-- Alertas Card -->
+                                <div
+                                    class="bg-white overflow-hidden shadow-lg rounded-xl border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+                                    <div class="p-6">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0">
+                                                <div
+                                                    class="h-12 w-12 bg-red-500 rounded-lg flex items-center justify-center">
+                                                    <i class="fas fa-exclamation-triangle text-white text-xl"></i>
+                                                </div>
+                                            </div>
+                                            <div class="ml-4 flex-1">
+                                                <p class="text-sm font-medium text-gray-600">Alertas Activas</p>
+                                                <p class="text-2xl font-bold text-gray-900">
+                                                    <%= typeof alertasCount !=='undefined' ? alertasCount : 0 %>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4">
+                                            <span class="text-gray-400 text-sm font-medium cursor-not-allowed">
+                                                Solo visualización <i class="fas fa-eye ml-1"></i>
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="ml-4 flex-1">
-                                <p class="text-sm font-medium text-gray-600">Alertas Activas</p>
-                                <p class="text-2xl font-bold text-gray-900"><%= typeof alertasCount !== 'undefined' ? alertasCount : 0 %></p>
-                            </div>
-                        </div>
-                        <div class="mt-4">
-                            <span class="text-gray-400 text-sm font-medium cursor-not-allowed">
-                                Solo visualización <i class="fas fa-eye ml-1"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Mensajes Card -->
-                <div class="bg-white overflow-hidden shadow-lg rounded-xl border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+                                <!-- Mensajes Card -->
+                                <!-- <div class="bg-white overflow-hidden shadow-lg rounded-xl border border-gray-100 hover:shadow-xl transition-shadow duration-300">
                     <div class="p-6">
                         <div class="flex items-center">
                             <div class="flex-shrink-0">
@@ -202,189 +224,225 @@
                             </span>
                         </div>
                     </div>
-                </div>
-            </div>
+                </div> -->
+                            </div>
 
-            <!-- Información Detallada de Colmenas -->
-            <div class="bg-white shadow-lg rounded-xl border border-gray-100 mb-8">
-                <div class="px-6 py-4 border-b border-gray-200">
-                    <h3 class="text-lg font-medium text-gray-900">
-                        <i class="fas fa-thermometer-half text-bee-yellow mr-2"></i>
-                        Estado Actual de Mis Colmenas
-                    </h3>
-                    <p class="text-sm text-gray-600 mt-1">Temperaturas y condiciones en tiempo real</p>
-                </div>
-                <div class="p-6">
-                    <% if (typeof colmenasInfo !== 'undefined' && colmenasInfo.length > 0) { %>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <% colmenasInfo.forEach(function(colmena) { %>
-                                <div class="bg-gray-50 rounded-lg border border-gray-200 p-5 hover:shadow-md transition-shadow duration-200">
-                                    <!-- Header de la Colmena -->
-                                    <div class="flex items-center justify-between mb-4">
-                                        <div class="flex items-center">
-                                            <div class="h-10 w-10 bg-bee-yellow rounded-lg flex items-center justify-center mr-3">
-                                                <i class="fas fa-home text-white"></i>
-                                            </div>
-                                            <div>
-                                                <h4 class="font-semibold text-gray-900 text-sm"><%= colmena.descripcion %></h4>
-                                                <p class="text-xs text-gray-500">ID: <%= colmena.id %></p>
-                                            </div>
-                                        </div>
-                                        <% if (colmena.estado === 'Activa') { %>
-                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                <i class="fas fa-circle text-green-500 mr-1" style="font-size: 6px;"></i>
-                                                <%= colmena.estado %>
-                                            </span>
-                                        <% } else if (colmena.estado === 'Normal') { %>
-                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                                <i class="fas fa-circle text-yellow-500 mr-1" style="font-size: 6px;"></i>
-                                                <%= colmena.estado %>
-                                            </span>
-                                        <% } else { %>
-                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                                <i class="fas fa-circle text-red-500 mr-1" style="font-size: 6px;"></i>
-                                                <%= colmena.estado %>
-                                            </span>
-                                        <% } %>
-                                    </div>
-
-                                    <!-- Datos de Temperatura -->
-                                    <div class="space-y-3">
-                                        <!-- Temperatura Interna -->
-                                        <div class="flex items-center justify-between">
-                                            <div class="flex items-center">
-                                                <i class="fas fa-thermometer-three-quarters text-red-500 mr-2"></i>
-                                                <span class="text-sm font-medium text-gray-700">Temp. Interna</span>
-                                            </div>
-                                            <% if (colmena.temperaturaInterna !== null) { %>
-                                                <div class="flex items-center">
-                                                    <span class="text-lg font-bold text-gray-900"><%= colmena.temperaturaInterna.toFixed(1) %>°C</span>
-                                                    <% if (colmena.temperaturaInterna > 38) { %>
-                                                        <i class="fas fa-exclamation-triangle text-red-500 ml-2" title="Temperatura crítica"></i>
-                                                    <% } else if (colmena.temperaturaInterna > 36) { %>
-                                                        <i class="fas fa-exclamation-circle text-yellow-500 ml-2" title="Temperatura alta"></i>
-                                                    <% } %>
-                                                </div>
-                                            <% } else { %>
-                                                <span class="text-sm text-gray-400">Sin datos</span>
-                                            <% } %>
-                                        </div>
-
-                                        <!-- Temperatura Externa -->
-                                        <div class="flex items-center justify-between">
-                                            <div class="flex items-center">
-                                                <i class="fas fa-thermometer-half text-blue-500 mr-2"></i>
-                                                <span class="text-sm font-medium text-gray-700">Temp. Externa</span>
-                                            </div>
-                                            <% if (colmena.temperaturaExterna !== null) { %>
-                                                <span class="text-lg font-bold text-gray-900"><%= colmena.temperaturaExterna.toFixed(1) %>°C</span>
-                                            <% } else { %>
-                                                <span class="text-sm text-gray-400">Sin datos</span>
-                                            <% } %>
-                                        </div>
-
-                                        <!-- Humedad -->
-                                        <% if (colmena.humedad !== null) { %>
-                                        <div class="flex items-center justify-between">
-                                            <div class="flex items-center">
-                                                <i class="fas fa-tint text-blue-400 mr-2"></i>
-                                                <span class="text-sm font-medium text-gray-700">Humedad</span>
-                                            </div>
-                                            <span class="text-lg font-bold text-gray-900"><%= colmena.humedad.toFixed(1) %>%</span>
-                                        </div>
-                                        <% } %>
-
-                                        <!-- Peso -->
-                                        <% if (colmena.peso !== null) { %>
-                                        <div class="flex items-center justify-between">
-                                            <div class="flex items-center">
-                                                <i class="fas fa-weight text-gray-600 mr-2"></i>
-                                                <span class="text-sm font-medium text-gray-700">Peso</span>
-                                            </div>
-                                            <span class="text-lg font-bold text-gray-900"><%= colmena.peso.toFixed(2) %> kg</span>
-                                        </div>
-                                        <% } %>
-                                    </div>
-
-                                    <!-- Alertas -->
-                                    <% if (colmena.alertas && colmena.alertas.length > 0) { %>
-                                    <div class="mt-4 pt-3 border-t border-gray-200">
-                                        <% colmena.alertas.forEach(function(alerta) { %>
-                                            <div class="flex items-center text-xs <%= alerta.tipo === 'critica' ? 'text-red-600' : 'text-yellow-600' %> mb-1">
-                                                <i class="fas fa-exclamation-triangle mr-1"></i>
-                                                <%= alerta.mensaje %>
-                                            </div>
-                                        <% }); %>
-                                    </div>
-                                    <% } %>
-
-                                    <!-- Última Lectura -->
-                                    <% if (colmena.ultimaLectura) { %>
-                                    <div class="mt-4 pt-3 border-t border-gray-200">
-                                        <div class="flex items-center text-xs text-gray-500">
-                                            <i class="fas fa-clock mr-1"></i>
-                                            Última actualización: <%= new Date(colmena.ultimaLectura).toLocaleString('es-ES') %>
-                                        </div>
-                                    </div>
-                                    <% } %>
+                            <!-- Información Detallada de Colmenas -->
+                            <div class="bg-white shadow-lg rounded-xl border border-gray-100 mb-8">
+                                <div class="px-6 py-4 border-b border-gray-200">
+                                    <h3 class="text-lg font-medium text-gray-900">
+                                        <i class="fas fa-thermometer-half text-bee-yellow mr-2"></i>
+                                        Estado Actual de Mi Colmena
+                                    </h3>
+                                    <p class="text-sm text-gray-600 mt-1">Temperaturas y condiciones en tiempo real</p>
                                 </div>
-                            <% }); %>
-                        </div>
-                    <% } else { %>
-                        <div class="text-center py-8">
-                            <i class="fas fa-home text-gray-300 text-4xl mb-4"></i>
-                            <p class="text-gray-500 text-lg">No hay colmenas con datos disponibles</p>
-                            <p class="text-sm text-gray-400 mt-1">Los datos aparecerán aquí cuando los sensores envíen información</p>
-                        </div>
-                    <% } %>
-                </div>
-            </div>
+                                <div class="p-6">
+                                    <% if (typeof colmenasInfo !=='undefined' && colmenasInfo.length> 0) { %>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                            <% colmenasInfo.forEach(function(colmena) { %>
+                                                <div
+                                                    class="bg-gray-50 rounded-lg border border-gray-200 p-5 hover:shadow-md transition-shadow duration-200">
+                                                    <!-- Header de la Colmena -->
+                                                    <div class="flex items-center justify-between mb-4">
+                                                        <div class="flex items-center">
+                                                            <div
+                                                                class="h-10 w-10 bg-bee-yellow rounded-lg flex items-center justify-center mr-3">
+                                                                <i class="fas fa-home text-white"></i>
+                                                            </div>
+                                                            <div>
+                                                                <h4 class="font-semibold text-gray-900 text-sm">
+                                                                    <%= colmena.descripcion %>
+                                                                </h4>
+                                                                <p class="text-xs text-gray-500">ID: <%= colmena.id %>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                        <% if (colmena.estado==='Activa' ) { %>
+                                                            <span
+                                                                class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                                <i class="fas fa-circle text-green-500 mr-1"
+                                                                    style="font-size: 6px;"></i>
+                                                                <%= colmena.estado %>
+                                                            </span>
+                                                            <% } else if (colmena.estado==='Normal' ) { %>
+                                                                <span
+                                                                    class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                                    <i class="fas fa-circle text-yellow-500 mr-1"
+                                                                        style="font-size: 6px;"></i>
+                                                                    <%= colmena.estado %>
+                                                                </span>
+                                                                <% } else { %>
+                                                                    <span
+                                                                        class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                                        <i class="fas fa-circle text-red-500 mr-1"
+                                                                            style="font-size: 6px;"></i>
+                                                                        <%= colmena.estado %>
+                                                                    </span>
+                                                                    <% } %>
+                                                    </div>
 
-            <!-- Data Refresh -->
-            <div class="bg-white shadow-lg rounded-xl border border-gray-100 mb-8">
-                <div class="px-6 py-4 border-b border-gray-200">
-                    <h3 class="text-lg font-medium text-gray-900">Control de Visualización</h3>
-                </div>
-                <div class="p-6">
-                    <div class="flex justify-center">
-                        <button id="refreshChartsBtn" class="flex items-center justify-center px-6 py-3 border border-green-300 rounded-lg text-sm font-medium text-green-700 bg-green-50 hover:bg-green-100 transition-colors duration-200">
-                            <i class="fas fa-sync-alt mr-2 text-green-500"></i>
-                            Actualizar Datos
-                        </button>
-                    </div>
-                </div>
-            </div>
+                                                    <!-- Datos de Temperatura -->
+                                                    <div class="space-y-3">
+                                                        <!-- Temperatura Interna -->
+                                                        <div class="flex items-center justify-between">
+                                                            <div class="flex items-center">
+                                                                <i
+                                                                    class="fas fa-thermometer-three-quarters text-red-500 mr-2"></i>
+                                                                <span class="text-sm font-medium text-gray-700">Temp.
+                                                                    Colmena</span>
+                                                            </div>
+                                                            <% if (colmena.temperaturaInterna !==null) { %>
+                                                                <div class="flex items-center">
+                                                                    <span class="text-lg font-bold text-gray-900">
+                                                                        <%= colmena.temperaturaInterna.toFixed(1) %>°C
+                                                                    </span>
+                                                                    <% if (colmena.temperaturaInterna> 38) { %>
+                                                                        <i class="fas fa-exclamation-triangle text-red-500 ml-2"
+                                                                            title="Temperatura crítica"></i>
+                                                                        <% } else if (colmena.temperaturaInterna> 36) {
+                                                                            %>
+                                                                            <i class="fas fa-exclamation-circle text-yellow-500 ml-2"
+                                                                                title="Temperatura alta"></i>
+                                                                            <% } %>
+                                                                </div>
+                                                                <% } else { %>
+                                                                    <span class="text-sm text-gray-400">Sin datos</span>
+                                                                    <% } %>
+                                                        </div>
 
-            <!-- Charts Section -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                <!-- Mensajes por Día -->
-                <div class="bg-white shadow-lg rounded-xl border border-gray-100">
-                    <div class="px-6 py-4 border-b border-gray-200">
-                        <h3 class="text-lg font-medium text-gray-900">
-                            <i class="fas fa-chart-line text-blue-500 mr-2"></i>
-                            Mensajes (Últimos 7 días)
-                        </h3>
-                    </div>
-                    <div class="p-6">
-                        <canvas id="mensajesChart" width="400" height="200"></canvas>
-                    </div>
-                </div>
+                                                        <!-- Temperatura Externa -->
+                                                        <div class="flex items-center justify-between">
+                                                            <div class="flex items-center">
+                                                                <i
+                                                                    class="fas fa-thermometer-half text-blue-500 mr-2"></i>
+                                                                <span class="text-sm font-medium text-gray-700">Temp.
+                                                                    Ambiente</span>
+                                                            </div>
+                                                            <% if (colmena.temperaturaExterna !==null) { %>
+                                                                <span class="text-lg font-bold text-gray-900">
+                                                                    <%= colmena.temperaturaExterna.toFixed(1) %>°C
+                                                                </span>
+                                                                <% } else { %>
+                                                                    <span class="text-sm text-gray-400">Sin datos</span>
+                                                                    <% } %>
+                                                        </div>
 
-                <!-- Alertas por Tipo -->
-                <div class="bg-white shadow-lg rounded-xl border border-gray-100">
-                    <div class="px-6 py-4 border-b border-gray-200">
-                        <h3 class="text-lg font-medium text-gray-900">
-                            <i class="fas fa-exclamation-triangle text-red-500 mr-2"></i>
-                            Alertas por Tipo
-                        </h3>
-                    </div>
-                    <div class="p-6">
-                        <canvas id="alertasChart" width="400" height="200"></canvas>
-                    </div>
-                </div>
+                                                        <!-- Humedad -->
+                                                        <% if (colmena.humedad !==null) { %>
+                                                            <div class="flex items-center justify-between">
+                                                                <div class="flex items-center">
+                                                                    <i class="fas fa-tint text-blue-400 mr-2"></i>
+                                                                    <span
+                                                                        class="text-sm font-medium text-gray-700">Humedad</span>
+                                                                </div>
+                                                                <span class="text-lg font-bold text-gray-900">
+                                                                    <%= colmena.humedad.toFixed(1) %>%
+                                                                </span>
+                                                            </div>
+                                                            <% } %>
 
-                <!-- Nodos por Tipo -->
-                <div class="bg-white shadow-lg rounded-xl border border-gray-100">
+                                                                <!-- Peso -->
+                                                                <% if (colmena.peso !==null) { %>
+                                                                    <div class="flex items-center justify-between">
+                                                                        <div class="flex items-center">
+                                                                            <i
+                                                                                class="fas fa-weight text-gray-600 mr-2"></i>
+                                                                            <span
+                                                                                class="text-sm font-medium text-gray-700">Peso</span>
+                                                                        </div>
+                                                                        <span class="text-lg font-bold text-gray-900">
+                                                                            <%= colmena.peso.toFixed(2) %> kg
+                                                                        </span>
+                                                                    </div>
+                                                                    <% } %>
+                                                    </div>
+
+                                                    <!-- Alertas -->
+                                                    <% if (colmena.alertas && colmena.alertas.length> 0) { %>
+                                                        <div class="mt-4 pt-3 border-t border-gray-200">
+                                                            <% colmena.alertas.forEach(function(alerta) { %>
+                                                                <div
+                                                                    class="flex items-center text-xs <%= alerta.tipo === 'critica' ? 'text-red-600' : 'text-yellow-600' %> mb-1">
+                                                                    <i class="fas fa-exclamation-triangle mr-1"></i>
+                                                                    <%= alerta.mensaje %>
+                                                                </div>
+                                                                <% }); %>
+                                                        </div>
+                                                        <% } %>
+
+                                                            <!-- Última Lectura -->
+                                                            <% if (colmena.ultimaLectura) { %>
+                                                                <div class="mt-4 pt-3 border-t border-gray-200">
+                                                                    <div
+                                                                        class="flex items-center text-xs text-gray-500">
+                                                                        <i class="fas fa-clock mr-1"></i>
+                                                                        Última actualización: <%= new
+                                                                            Date(colmena.ultimaLectura).toLocaleString('es-ES')
+                                                                            %>
+                                                                    </div>
+                                                                </div>
+                                                                <% } %>
+                                                </div>
+                                                <% }); %>
+                                        </div>
+                                        <% } else { %>
+                                            <div class="text-center py-8">
+                                                <i class="fas fa-home text-gray-300 text-4xl mb-4"></i>
+                                                <p class="text-gray-500 text-lg">No hay colmenas con datos disponibles
+                                                </p>
+                                                <p class="text-sm text-gray-400 mt-1">Los datos aparecerán aquí cuando
+                                                    los sensores envíen información</p>
+                                            </div>
+                                            <% } %>
+                                </div>
+                            </div>
+
+                            <!-- Data Refresh -->
+                            <div class="bg-white shadow-lg rounded-xl border border-gray-100 mb-8">
+                                <div class="px-6 py-4 border-b border-gray-200">
+                                    <h3 class="text-lg font-medium text-gray-900">Control de Visualización</h3>
+                                </div>
+                                <div class="p-6">
+                                    <div class="flex justify-center">
+                                        <button id="refreshChartsBtn"
+                                            class="flex items-center justify-center px-6 py-3 border border-green-300 rounded-lg text-sm font-medium text-green-700 bg-green-50 hover:bg-green-100 transition-colors duration-200">
+                                            <i class="fas fa-sync-alt mr-2 text-green-500"></i>
+                                            Actualizar Datos
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Charts Section -->
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                                <!-- Mensajes por Día -->
+                                <!-- <div class="bg-white shadow-lg rounded-xl border border-gray-100">
+                                        <div class="px-6 py-4 border-b border-gray-200">
+                                            <h3 class="text-lg font-medium text-gray-900">
+                                                <i class="fas fa-chart-line text-blue-500 mr-2"></i>
+                                                Mensajes (Últimos 7 días)
+                                            </h3>
+                                        </div>
+                                        <div class="p-6">
+                                            <canvas id="mensajesChart" width="400" height="200"></canvas>
+                                        </div>
+                                    </div> -->
+
+                                <!-- Alertas por Tipo -->
+                                <div class="bg-white shadow-lg rounded-xl border border-gray-100">
+                                    <div class="px-6 py-4 border-b border-gray-200">
+                                        <h3 class="text-lg font-medium text-gray-900">
+                                            <i class="fas fa-exclamation-triangle text-red-500 mr-2"></i>
+                                            Alertas por Tipo
+                                        </h3>
+                                    </div>
+                                    <div class="p-6">
+                                        <canvas id="alertasChart" width="400" height="200"></canvas>
+                                    </div>
+                                </div>
+
+                                <!-- Nodos por Tipo -->
+                                <!-- <div class="bg-white shadow-lg rounded-xl border border-gray-100">
                     <div class="px-6 py-4 border-b border-gray-200">
                         <h3 class="text-lg font-medium text-gray-900">
                             <i class="fas fa-network-wired text-green-500 mr-2"></i>
@@ -394,513 +452,513 @@
                     <div class="p-6">
                         <canvas id="nodosChart" width="400" height="200"></canvas>
                     </div>
-                </div>
+                </div> -->
 
-                <!-- Actividad de Alertas -->
-                <div class="bg-white shadow-lg rounded-xl border border-gray-100">
-                    <div class="px-6 py-4 border-b border-gray-200">
-                        <h3 class="text-lg font-medium text-gray-900">
-                            <i class="fas fa-bell text-bee-yellow mr-2"></i>
-                            Actividad de Alertas (7 días)
-                        </h3>
-                    </div>
-                    <div class="p-6">
-                        <canvas id="actividadAlertasChart" width="400" height="200"></canvas>
-                    </div>
-                </div>
-            </div>
+                                <!-- Actividad de Alertas -->
+                                <div class="bg-white shadow-lg rounded-xl border border-gray-100">
+                                    <div class="px-6 py-4 border-b border-gray-200">
+                                        <h3 class="text-lg font-medium text-gray-900">
+                                            <i class="fas fa-bell text-bee-yellow mr-2"></i>
+                                            Actividad de Alertas (7 días)
+                                        </h3>
+                                    </div>
+                                    <div class="p-6">
+                                        <canvas id="actividadAlertasChart" width="400" height="200"></canvas>
+                                    </div>
+                                </div>
+                            </div>
 
-            <!-- Gráfico de Temperaturas de Colmenas -->
-            <div class="bg-white shadow-lg rounded-xl border border-gray-100 mb-8">
-                <div class="px-6 py-4 border-b border-gray-200">
-                    <h3 class="text-lg font-medium text-gray-900">
-                        <i class="fas fa-thermometer-half text-red-500 mr-2"></i>
-                        Temperaturas Actuales de Colmenas
-                    </h3>
-                </div>
-                <div class="p-6">
-                    <canvas id="temperaturasChart" width="400" height="300"></canvas>
-                </div>
-            </div>
+                            <!-- Gráfico de Temperaturas de Colmenas -->
+                            <div class="bg-white shadow-lg rounded-xl border border-gray-100 mb-8">
+                                <div class="px-6 py-4 border-b border-gray-200">
+                                    <h3 class="text-lg font-medium text-gray-900">
+                                        <i class="fas fa-thermometer-half text-red-500 mr-2"></i>
+                                        Temperaturas Actuale de Colmena
+                                    </h3>
+                                </div>
+                                <div class="p-6">
+                                    <canvas id="temperaturasChart" width="400" height="300"></canvas>
+                                </div>
+                            </div>
 
-            <!-- Recent Activity -->
-            <div class="bg-white shadow-lg rounded-xl border border-gray-100">
-                <div class="px-6 py-4 border-b border-gray-200">
-                    <h3 class="text-lg font-medium text-gray-900">Actividad Reciente</h3>
-                </div>
-                <div class="p-6">
-                    <div class="text-center py-8">
-                        <i class="fas fa-inbox text-gray-300 text-4xl mb-4"></i>
-                        <p class="text-gray-500">No hay actividad reciente</p>
-                        <p class="text-sm text-gray-400 mt-1">La actividad aparecerá aquí cuando comiences a usar el sistema</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
+                            <!-- Recent Activity -->
+                            <div class="bg-white shadow-lg rounded-xl border border-gray-100">
+                                <div class="px-6 py-4 border-b border-gray-200">
+                                    <h3 class="text-lg font-medium text-gray-900">Actividad Reciente</h3>
+                                </div>
+                                <div class="p-6">
+                                    <div class="text-center py-8">
+                                        <i class="fas fa-inbox text-gray-300 text-4xl mb-4"></i>
+                                        <p class="text-gray-500">No hay actividad reciente</p>
+                                        <p class="text-sm text-gray-400 mt-1">La actividad aparecerá aquí cuando
+                                            comiences a usar el sistema</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
 
-    <script>
-        // Auto-hide flash messages
-        setTimeout(() => {
-            const successMsg = document.getElementById('flash-success');
-            const errorMsg = document.getElementById('flash-error');
-            if (successMsg) successMsg.remove();
-            if (errorMsg) errorMsg.remove();
-        }, 5000);
+                    <script>
+                        // Auto-hide flash messages
+                        setTimeout(() => {
+                            const successMsg = document.getElementById('flash-success');
+                            const errorMsg = document.getElementById('flash-error');
+                            if (successMsg) successMsg.remove();
+                            if (errorMsg) errorMsg.remove();
+                        }, 5000);
 
-        // User menu dropdown
-        document.addEventListener('DOMContentLoaded', function() {
-            const userMenuButton = document.getElementById('user-menu-button');
-            const userMenu = document.getElementById('user-menu');
-            
-            if (userMenuButton && userMenu) {
-                userMenuButton.addEventListener('click', function() {
-                    userMenu.classList.toggle('hidden');
-                });
-                
-                // Cerrar menú al hacer clic fuera
-                document.addEventListener('click', function(event) {
-                    if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
-                        userMenu.classList.add('hidden');
-                    }
-                });
-            }
+                        // User menu dropdown
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const userMenuButton = document.getElementById('user-menu-button');
+                            const userMenu = document.getElementById('user-menu');
 
-            // Inicializar gráficos
-            initializeCharts();
+                            if (userMenuButton && userMenu) {
+                                userMenuButton.addEventListener('click', function () {
+                                    userMenu.classList.toggle('hidden');
+                                });
 
-            // Botón de actualizar gráficos
-            const refreshBtn = document.getElementById('refreshChartsBtn');
-            if (refreshBtn) {
-                refreshBtn.addEventListener('click', function() {
-                    refreshCharts();
-                });
-            }
-        });
-
-        let charts = {}; // Almacenar instancias de gráficos
-
-        function initializeCharts() {
-            const chartData = <%- typeof chartData !== 'undefined' ? chartData : '{}' %>; 
-            createCharts(chartData);
-        }
-
-        async function refreshCharts() {
-            const refreshBtn = document.getElementById('refreshChartsBtn');
-            const icon = refreshBtn.querySelector('i');
-            
-            // Mostrar estado de carga
-            icon.classList.add('fa-spin');
-            refreshBtn.disabled = true;
-            
-            try {
-                const response = await fetch('/dashboard/api/chart-data');
-                const chartData = await response.json();
-                
-                // Actualizar gráficos con nuevos datos
-                updateCharts(chartData);
-                
-            } catch (error) {
-                console.error('Error refreshing charts:', error);
-                // Aquí podrías mostrar un mensaje de error
-            } finally {
-                // Quitar estado de carga
-                icon.classList.remove('fa-spin');
-                refreshBtn.disabled = false;
-            }
-        }
-
-        function createCharts(chartData) {
-            // Chart colors
-            const colors = {
-                primary: '#FFD700', // bee-yellow
-                secondary: '#FFA500', // bee-orange
-                success: '#10B981',
-                danger: '#EF4444',
-                warning: '#F59E0B',
-                info: '#3B82F6',
-                purple: '#8B5CF6',
-                pink: '#EC4899'
-            };
-
-            // Mensajes por Día Chart
-            if (chartData.mensajesPorDia) {
-                const ctx1 = document.getElementById('mensajesChart').getContext('2d');
-                charts.mensajes = new Chart(ctx1, {
-                    type: 'line',
-                    data: {
-                        labels: chartData.mensajesPorDia.labels || [],
-                        datasets: [{
-                            label: 'Mensajes',
-                            data: chartData.mensajesPorDia.data || [],
-                            borderColor: colors.info,
-                            backgroundColor: colors.info + '20',
-                            borderWidth: 2,
-                            fill: true,
-                            tension: 0.4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: false
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                grid: {
-                                    color: '#f3f4f6'
-                                }
-                            },
-                            x: {
-                                grid: {
-                                    display: false
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-
-            // Alertas por Tipo Chart
-            if (chartData.alertasPorTipo && chartData.alertasPorTipo.labels.length > 0) {
-                const ctx2 = document.getElementById('alertasChart').getContext('2d');
-                charts.alertas = new Chart(ctx2, {
-                    type: 'doughnut',
-                    data: {
-                        labels: chartData.alertasPorTipo.labels,
-                        datasets: [{
-                            data: chartData.alertasPorTipo.data,
-                            backgroundColor: [
-                                colors.danger,
-                                colors.warning,
-                                colors.info,
-                                colors.purple,
-                                colors.pink
-                            ],
-                            borderWidth: 2,
-                            borderColor: '#ffffff'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: {
-                                    padding: 20,
-                                    usePointStyle: true
-                                }
-                            }
-                        }
-                    }
-                });
-            } else {
-                // Mostrar mensaje "Sin datos" para alertas
-                showNoDataMessage('alertasChart', 'fas fa-chart-pie', 'No hay alertas para mostrar');
-            }
-
-            // Nodos por Tipo Chart
-            if (chartData.nodosPorTipo && chartData.nodosPorTipo.labels.length > 0) {
-                const ctx3 = document.getElementById('nodosChart').getContext('2d');
-                charts.nodos = new Chart(ctx3, {
-                    type: 'bar',
-                    data: {
-                        labels: chartData.nodosPorTipo.labels,
-                        datasets: [{
-                            label: 'Cantidad',
-                            data: chartData.nodosPorTipo.data,
-                            backgroundColor: colors.success,
-                            borderColor: colors.success,
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: false
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                grid: {
-                                    color: '#f3f4f6'
-                                }
-                            },
-                            x: {
-                                grid: {
-                                    display: false
-                                }
-                            }
-                        }
-                    }
-                });
-            } else {
-                // Mostrar mensaje "Sin datos" para nodos
-                showNoDataMessage('nodosChart', 'fas fa-network-wired', 'No hay nodos para mostrar');
-            }
-
-            // Actividad de Alertas Chart
-            if (chartData.alertasPorDia) {
-                const ctx4 = document.getElementById('actividadAlertasChart').getContext('2d');
-                charts.actividadAlertas = new Chart(ctx4, {
-                    type: 'bar',
-                    data: {
-                        labels: chartData.alertasPorDia.labels || [],
-                        datasets: [{
-                            label: 'Alertas',
-                            data: chartData.alertasPorDia.data || [],
-                            backgroundColor: colors.primary,
-                            borderColor: colors.secondary,
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: false
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                grid: {
-                                    color: '#f3f4f6'
-                                }
-                            },
-                            x: {
-                                grid: {
-                                    display: false
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-
-            // Gráfico de Temperaturas de Colmenas
-            if (chartData.temperaturasColmenas && chartData.temperaturasColmenas.labels.length > 0) {
-                const ctx5 = document.getElementById('temperaturasChart').getContext('2d');
-                charts.temperaturas = new Chart(ctx5, {
-                    type: 'bar',
-                    data: {
-                        labels: chartData.temperaturasColmenas.labels,
-                        datasets: [{
-                            label: 'Temperatura Interna (°C)',
-                            data: chartData.temperaturasColmenas.temperaturaInterna,
-                            backgroundColor: colors.danger + '80',
-                            borderColor: colors.danger,
-                            borderWidth: 2
-                        }, {
-                            label: 'Temperatura Externa (°C)',
-                            data: chartData.temperaturasColmenas.temperaturaExterna,
-                            backgroundColor: colors.info + '80',
-                            borderColor: colors.info,
-                            borderWidth: 2
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                                labels: {
-                                    padding: 20,
-                                    usePointStyle: true
-                                }
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        return context.dataset.label + ': ' + context.parsed.y.toFixed(1) + '°C';
+                                // Cerrar menú al hacer clic fuera
+                                document.addEventListener('click', function (event) {
+                                    if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
+                                        userMenu.classList.add('hidden');
                                     }
+                                });
+                            }
+
+                            // Inicializar gráficos
+                            initializeCharts();
+
+                            // Botón de actualizar gráficos
+                            const refreshBtn = document.getElementById('refreshChartsBtn');
+                            if (refreshBtn) {
+                                refreshBtn.addEventListener('click', function () {
+                                    refreshCharts();
+                                });
+                            }
+                        });
+
+                        let charts = {}; // Almacenar instancias de gráficos
+
+                        function initializeCharts() {
+                            const chartData = <%- typeof chartData !== 'undefined' ? chartData : '{}' %>; 
+                            createCharts(chartData);
+                        }
+
+                        async function refreshCharts() {
+                            const refreshBtn = document.getElementById('refreshChartsBtn');
+                            const icon = refreshBtn.querySelector('i');
+
+                            // Mostrar estado de carga
+                            icon.classList.add('fa-spin');
+                            refreshBtn.disabled = true;
+
+                            try {
+                                const response = await fetch('/dashboard/api/chart-data');
+                                const chartData = await response.json();
+
+                                // Actualizar gráficos con nuevos datos
+                                updateCharts(chartData);
+
+                            } catch (error) {
+                                console.error('Error refreshing charts:', error);
+                                // Aquí podrías mostrar un mensaje de error
+                            } finally {
+                                // Quitar estado de carga
+                                icon.classList.remove('fa-spin');
+                                refreshBtn.disabled = false;
+                            }
+                        }
+
+                        function createCharts(chartData) {
+                            // Chart colors
+                            const colors = {
+                                primary: '#FFD700', // bee-yellow
+                                secondary: '#FFA500', // bee-orange
+                                success: '#10B981',
+                                danger: '#EF4444',
+                                warning: '#F59E0B',
+                                info: '#3B82F6',
+                                purple: '#8B5CF6',
+                                pink: '#EC4899'
+                            };
+
+                            // Mensajes por Día Chart
+                            // if (chartData.mensajesPorDia) {
+                            //     const ctx1 = document.getElementById('mensajesChart').getContext('2d');
+                            //     charts.mensajes = new Chart(ctx1, {
+                            //         type: 'line',
+                            //         data: {
+                            //             labels: chartData.mensajesPorDia.labels || [],
+                            //             datasets: [{
+                            //                 label: 'Mensajes',
+                            //                 data: chartData.mensajesPorDia.data || [],
+                            //                 borderColor: colors.info,
+                            //                 backgroundColor: colors.info + '20',
+                            //                 borderWidth: 2,
+                            //                 fill: true,
+                            //                 tension: 0.4
+                            //             }]
+                            //         },
+                            //         options: {
+                            //             responsive: true,
+                            //             maintainAspectRatio: false,
+                            //             plugins: {
+                            //                 legend: {
+                            //                     display: false
+                            //                 }
+                            //             },
+                            //             scales: {
+                            //                 y: {
+                            //                     beginAtZero: true,
+                            //                     grid: {
+                            //                         color: '#f3f4f6'
+                            //                     }
+                            //                 },
+                            //                 x: {
+                            //                     grid: {
+                            //                         display: false
+                            //                     }
+                            //                 }
+                            //             }
+                            //         }
+                            //     });
+                            // }
+
+                            // Alertas por Tipo Chart
+                            if (chartData.alertasPorTipo && chartData.alertasPorTipo.labels.length > 0) {
+                                const ctx2 = document.getElementById('alertasChart').getContext('2d');
+                                charts.alertas = new Chart(ctx2, {
+                                    type: 'doughnut',
+                                    data: {
+                                        labels: chartData.alertasPorTipo.labels,
+                                        datasets: [{
+                                            data: chartData.alertasPorTipo.data,
+                                            backgroundColor: [
+                                                colors.danger,
+                                                colors.warning,
+                                                colors.info,
+                                                colors.purple,
+                                                colors.pink
+                                            ],
+                                            borderWidth: 2,
+                                            borderColor: '#ffffff'
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        plugins: {
+                                            legend: {
+                                                position: 'bottom',
+                                                labels: {
+                                                    padding: 20,
+                                                    usePointStyle: true
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                            } else {
+                                // Mostrar mensaje "Sin datos" para alertas
+                                showNoDataMessage('alertasChart', 'fas fa-chart-pie', 'No hay alertas para mostrar');
+                            }
+
+                            // Nodos por Tipo Chart
+                            // if (chartData.nodosPorTipo && chartData.nodosPorTipo.labels.length > 0) {
+                            //     const ctx3 = document.getElementById('nodosChart').getContext('2d');
+                            //     charts.nodos = new Chart(ctx3, {
+                            //         type: 'bar',
+                            //         data: {
+                            //             labels: chartData.nodosPorTipo.labels,
+                            //             datasets: [{
+                            //                 label: 'Cantidad',
+                            //                 data: chartData.nodosPorTipo.data,
+                            //                 backgroundColor: colors.success,
+                            //                 borderColor: colors.success,
+                            //                 borderWidth: 1
+                            //             }]
+                            //         },
+                            //         options: {
+                            //             responsive: true,
+                            //             maintainAspectRatio: false,
+                            //             plugins: {
+                            //                 legend: {
+                            //                     display: false
+                            //                 }
+                            //             },
+                            //             scales: {
+                            //                 y: {
+                            //                     beginAtZero: true,
+                            //                     grid: {
+                            //                         color: '#f3f4f6'
+                            //                     }
+                            //                 },
+                            //                 x: {
+                            //                     grid: {
+                            //                         display: false
+                            //                     }
+                            //                 }
+                            //             }
+                            //         }
+                            //     });
+                            // } else {
+                            //     // Mostrar mensaje "Sin datos" para nodos
+                            //     showNoDataMessage('nodosChart', 'fas fa-network-wired', 'No hay nodos para mostrar');
+                            // }
+
+                            // Actividad de Alertas Chart
+                            if (chartData.alertasPorDia) {
+                                const ctx4 = document.getElementById('actividadAlertasChart').getContext('2d');
+                                charts.actividadAlertas = new Chart(ctx4, {
+                                    type: 'bar',
+                                    data: {
+                                        labels: chartData.alertasPorDia.labels || [],
+                                        datasets: [{
+                                            label: 'Alertas',
+                                            data: chartData.alertasPorDia.data || [],
+                                            backgroundColor: colors.primary,
+                                            borderColor: colors.secondary,
+                                            borderWidth: 1
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        plugins: {
+                                            legend: {
+                                                display: false
+                                            }
+                                        },
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true,
+                                                grid: {
+                                                    color: '#f3f4f6'
+                                                }
+                                            },
+                                            x: {
+                                                grid: {
+                                                    display: false
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+
+                            // Gráfico de Temperaturas de Colmenas
+                            if (chartData.temperaturasColmenas && chartData.temperaturasColmenas.labels.length > 0) {
+                                const ctx5 = document.getElementById('temperaturasChart').getContext('2d');
+                                charts.temperaturas = new Chart(ctx5, {
+                                    type: 'bar',
+                                    data: {
+                                        labels: chartData.temperaturasColmenas.labels,
+                                        datasets: [{
+                                            label: 'Temperatura Interna (°C)',
+                                            data: chartData.temperaturasColmenas.temperaturaInterna,
+                                            backgroundColor: colors.danger + '80',
+                                            borderColor: colors.danger,
+                                            borderWidth: 2
+                                        }, {
+                                            label: 'Temperatura Externa (°C)',
+                                            data: chartData.temperaturasColmenas.temperaturaExterna,
+                                            backgroundColor: colors.info + '80',
+                                            borderColor: colors.info,
+                                            borderWidth: 2
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        plugins: {
+                                            legend: {
+                                                position: 'top',
+                                                labels: {
+                                                    padding: 20,
+                                                    usePointStyle: true
+                                                }
+                                            },
+                                            tooltip: {
+                                                callbacks: {
+                                                    label: function (context) {
+                                                        return context.dataset.label + ': ' + context.parsed.y.toFixed(1) + '°C';
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true,
+                                                title: {
+                                                    display: true,
+                                                    text: 'Temperatura (°C)'
+                                                },
+                                                grid: {
+                                                    color: '#f3f4f6'
+                                                }
+                                            },
+                                            x: {
+                                                title: {
+                                                    display: true,
+                                                },
+                                                grid: {
+                                                    display: false
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                            } else {
+                                // Mostrar mensaje "Sin datos" para temperaturas
+                                showNoDataMessage('temperaturasChart', 'fas fa-thermometer-half', 'No hay datos de temperatura disponibles');
+                            }
+                        }
+
+                        function updateCharts(chartData) {
+                            // Update Mensajes Chart
+                            if (charts.mensajes && chartData.mensajesPorDia) {
+                                charts.mensajes.data.labels = chartData.mensajesPorDia.labels || [];
+                                charts.mensajes.data.datasets[0].data = chartData.mensajesPorDia.data || [];
+                                charts.mensajes.update();
+                            }
+
+                            // Update Alertas Chart
+                            if (chartData.alertasPorTipo && chartData.alertasPorTipo.labels.length > 0) {
+                                if (charts.alertas) {
+                                    charts.alertas.data.labels = chartData.alertasPorTipo.labels;
+                                    charts.alertas.data.datasets[0].data = chartData.alertasPorTipo.data;
+                                    charts.alertas.update();
+                                } else {
+                                    // Recreate chart if it didn't exist before
+                                    const alertasContainer = document.getElementById('alertasChart').parentElement;
+                                    alertasContainer.innerHTML = '<canvas id="alertasChart" width="400" height="200"></canvas>';
+
+                                    const ctx = document.getElementById('alertasChart').getContext('2d');
+                                    const colors = {
+                                        danger: '#EF4444',
+                                        warning: '#F59E0B',
+                                        info: '#3B82F6',
+                                        purple: '#8B5CF6',
+                                        pink: '#EC4899'
+                                    };
+
+                                    charts.alertas = new Chart(ctx, {
+                                        type: 'doughnut',
+                                        data: {
+                                            labels: chartData.alertasPorTipo.labels,
+                                            datasets: [{
+                                                data: chartData.alertasPorTipo.data,
+                                                backgroundColor: [
+                                                    colors.danger,
+                                                    colors.warning,
+                                                    colors.info,
+                                                    colors.purple,
+                                                    colors.pink
+                                                ],
+                                                borderWidth: 2,
+                                                borderColor: '#ffffff'
+                                            }]
+                                        },
+                                        options: {
+                                            responsive: true,
+                                            maintainAspectRatio: false,
+                                            plugins: {
+                                                legend: {
+                                                    position: 'bottom',
+                                                    labels: {
+                                                        padding: 20,
+                                                        usePointStyle: true
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    });
                                 }
                             }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                title: {
-                                    display: true,
-                                    text: 'Temperatura (°C)'
-                                },
-                                grid: {
-                                    color: '#f3f4f6'
+
+                            // Update Nodos Chart
+                            if (chartData.nodosPorTipo && chartData.nodosPorTipo.labels.length > 0) {
+                                if (charts.nodos) {
+                                    charts.nodos.data.labels = chartData.nodosPorTipo.labels;
+                                    charts.nodos.data.datasets[0].data = chartData.nodosPorTipo.data;
+                                    charts.nodos.update();
                                 }
-                            },
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: 'Colmenas'
-                                },
-                                grid: {
-                                    display: false
+                            }
+
+                            // Update Actividad Alertas Chart
+                            if (charts.actividadAlertas && chartData.alertasPorDia) {
+                                charts.actividadAlertas.data.labels = chartData.alertasPorDia.labels || [];
+                                charts.actividadAlertas.data.datasets[0].data = chartData.alertasPorDia.data || [];
+                                charts.actividadAlertas.update();
+                            }
+
+                            // Update Temperaturas Chart
+                            if (chartData.temperaturasColmenas && chartData.temperaturasColmenas.labels.length > 0) {
+                                if (charts.temperaturas) {
+                                    charts.temperaturas.data.labels = chartData.temperaturasColmenas.labels;
+                                    charts.temperaturas.data.datasets[0].data = chartData.temperaturasColmenas.temperaturaInterna;
+                                    charts.temperaturas.data.datasets[1].data = chartData.temperaturasColmenas.temperaturaExterna;
+                                    charts.temperaturas.update();
+                                } else {
+                                    // Recreate chart if it didn't exist before
+                                    const temperaturasContainer = document.getElementById('temperaturasChart').parentElement;
+                                    temperaturasContainer.innerHTML = '<canvas id="temperaturasChart" width="400" height="300"></canvas>';
+
+                                    const ctx = document.getElementById('temperaturasChart').getContext('2d');
+                                    const colors = {
+                                        danger: '#EF4444',
+                                        info: '#3B82F6'
+                                    };
+
+                                    charts.temperaturas = new Chart(ctx, {
+                                        type: 'bar',
+                                        data: {
+                                            labels: chartData.temperaturasColmenas.labels,
+                                            datasets: [{
+                                                label: 'Temperatura Interna (°C)',
+                                                data: chartData.temperaturasColmenas.temperaturaInterna,
+                                                backgroundColor: colors.danger + '80',
+                                                borderColor: colors.danger,
+                                                borderWidth: 2
+                                            }, {
+                                                label: 'Temperatura Externa (°C)',
+                                                data: chartData.temperaturasColmenas.temperaturaExterna,
+                                                backgroundColor: colors.info + '80',
+                                                borderColor: colors.info,
+                                                borderWidth: 2
+                                            }]
+                                        },
+                                        options: {
+                                            responsive: true,
+                                            maintainAspectRatio: false,
+                                            plugins: {
+                                                legend: {
+                                                    position: 'top',
+                                                    labels: {
+                                                        padding: 20,
+                                                        usePointStyle: true
+                                                    }
+                                                }
+                                            },
+                                            scales: {
+                                                y: {
+                                                    beginAtZero: true,
+                                                    title: {
+                                                        display: true,
+                                                        text: 'Temperatura (°C)'
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    });
                                 }
                             }
                         }
-                    }
-                });
-            } else {
-                // Mostrar mensaje "Sin datos" para temperaturas
-                showNoDataMessage('temperaturasChart', 'fas fa-thermometer-half', 'No hay datos de temperatura disponibles');
-            }
-        }
 
-        function updateCharts(chartData) {
-            // Update Mensajes Chart
-            if (charts.mensajes && chartData.mensajesPorDia) {
-                charts.mensajes.data.labels = chartData.mensajesPorDia.labels || [];
-                charts.mensajes.data.datasets[0].data = chartData.mensajesPorDia.data || [];
-                charts.mensajes.update();
-            }
-
-            // Update Alertas Chart
-            if (chartData.alertasPorTipo && chartData.alertasPorTipo.labels.length > 0) {
-                if (charts.alertas) {
-                    charts.alertas.data.labels = chartData.alertasPorTipo.labels;
-                    charts.alertas.data.datasets[0].data = chartData.alertasPorTipo.data;
-                    charts.alertas.update();
-                } else {
-                    // Recreate chart if it didn't exist before
-                    const alertasContainer = document.getElementById('alertasChart').parentElement;
-                    alertasContainer.innerHTML = '<canvas id="alertasChart" width="400" height="200"></canvas>';
-                    
-                    const ctx = document.getElementById('alertasChart').getContext('2d');
-                    const colors = {
-                        danger: '#EF4444',
-                        warning: '#F59E0B',
-                        info: '#3B82F6',
-                        purple: '#8B5CF6',
-                        pink: '#EC4899'
-                    };
-                    
-                    charts.alertas = new Chart(ctx, {
-                        type: 'doughnut',
-                        data: {
-                            labels: chartData.alertasPorTipo.labels,
-                            datasets: [{
-                                data: chartData.alertasPorTipo.data,
-                                backgroundColor: [
-                                    colors.danger,
-                                    colors.warning,
-                                    colors.info,
-                                    colors.purple,
-                                    colors.pink
-                                ],
-                                borderWidth: 2,
-                                borderColor: '#ffffff'
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: {
-                                    position: 'bottom',
-                                    labels: {
-                                        padding: 20,
-                                        usePointStyle: true
-                                    }
-                                }
-                            }
-                        }
-                    });
-                }
-            }
-
-            // Update Nodos Chart
-            if (chartData.nodosPorTipo && chartData.nodosPorTipo.labels.length > 0) {
-                if (charts.nodos) {
-                    charts.nodos.data.labels = chartData.nodosPorTipo.labels;
-                    charts.nodos.data.datasets[0].data = chartData.nodosPorTipo.data;
-                    charts.nodos.update();
-                }
-            }
-
-            // Update Actividad Alertas Chart
-            if (charts.actividadAlertas && chartData.alertasPorDia) {
-                charts.actividadAlertas.data.labels = chartData.alertasPorDia.labels || [];
-                charts.actividadAlertas.data.datasets[0].data = chartData.alertasPorDia.data || [];
-                charts.actividadAlertas.update();
-            }
-
-            // Update Temperaturas Chart
-            if (chartData.temperaturasColmenas && chartData.temperaturasColmenas.labels.length > 0) {
-                if (charts.temperaturas) {
-                    charts.temperaturas.data.labels = chartData.temperaturasColmenas.labels;
-                    charts.temperaturas.data.datasets[0].data = chartData.temperaturasColmenas.temperaturaInterna;
-                    charts.temperaturas.data.datasets[1].data = chartData.temperaturasColmenas.temperaturaExterna;
-                    charts.temperaturas.update();
-                } else {
-                    // Recreate chart if it didn't exist before
-                    const temperaturasContainer = document.getElementById('temperaturasChart').parentElement;
-                    temperaturasContainer.innerHTML = '<canvas id="temperaturasChart" width="400" height="300"></canvas>';
-                    
-                    const ctx = document.getElementById('temperaturasChart').getContext('2d');
-                    const colors = {
-                        danger: '#EF4444',
-                        info: '#3B82F6'
-                    };
-                    
-                    charts.temperaturas = new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: chartData.temperaturasColmenas.labels,
-                            datasets: [{
-                                label: 'Temperatura Interna (°C)',
-                                data: chartData.temperaturasColmenas.temperaturaInterna,
-                                backgroundColor: colors.danger + '80',
-                                borderColor: colors.danger,
-                                borderWidth: 2
-                            }, {
-                                label: 'Temperatura Externa (°C)',
-                                data: chartData.temperaturasColmenas.temperaturaExterna,
-                                backgroundColor: colors.info + '80',
-                                borderColor: colors.info,
-                                borderWidth: 2
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: {
-                                    position: 'top',
-                                    labels: {
-                                        padding: 20,
-                                        usePointStyle: true
-                                    }
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    title: {
-                                        display: true,
-                                        text: 'Temperatura (°C)'
-                                    }
-                                }
-                            }
-                        }
-                    });
-                }
-            }
-        }
-
-        function showNoDataMessage(canvasId, iconClass, message) {
-            const canvas = document.getElementById(canvasId);
-            const container = canvas.parentElement;
-            container.innerHTML = `
+                        function showNoDataMessage(canvasId, iconClass, message) {
+                            const canvas = document.getElementById(canvasId);
+                            const container = canvas.parentElement;
+                            container.innerHTML = `
                 <div class="flex items-center justify-center h-48 text-gray-500">
                     <div class="text-center">
                         <i class="${iconClass} text-3xl mb-2 opacity-50"></i>
@@ -908,9 +966,8 @@
                     </div>
                 </div>
             `;
-        }
-    </script>
-        }
-    </script>
+                        }
+                    </script>
 </body>
+
 </html>
