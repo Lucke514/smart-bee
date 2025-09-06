@@ -129,6 +129,79 @@
                             </div>
                         </div>
 
+                        <!-- Búsqueda por Fecha -->
+                        <div class="px-4 sm:px-0 mb-8">
+                            <div class="bg-white shadow-lg rounded-xl border border-gray-100">
+                                <div class="px-6 py-4 border-b border-gray-200">
+                                    <h3 class="text-lg font-medium text-gray-900">
+                                        <i class="fas fa-calendar-alt text-bee-yellow mr-2"></i>
+                                        Búsqueda por Rango de Fechas
+                                    </h3>
+                                    <p class="text-sm text-gray-600 mt-1">Filtra mensajes y alertas por período específico</p>
+                                </div>
+                                <div class="p-6">
+                                    <form action="/dashboard/buscar" method="GET" class="space-y-4 sm:space-y-0 sm:flex sm:items-end sm:space-x-4">
+                                        <div class="flex-1">
+                                            <label for="fechaDesde" class="block text-sm font-medium text-gray-700 mb-2">
+                                                <i class="fas fa-calendar-day mr-1"></i>
+                                                Fecha Desde
+                                            </label>
+                                            <input type="date" 
+                                                   id="fechaDesde" 
+                                                   name="fechaDesde" 
+                                                   value="<%= typeof fechaDesde !== 'undefined' ? fechaDesde : '' %>"
+                                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bee-yellow focus:border-bee-yellow transition-colors"
+                                                   required>
+                                        </div>
+                                        <div class="flex-1">
+                                            <label for="fechaHasta" class="block text-sm font-medium text-gray-700 mb-2">
+                                                <i class="fas fa-calendar-day mr-1"></i>
+                                                Fecha Hasta
+                                            </label>
+                                            <input type="date" 
+                                                   id="fechaHasta" 
+                                                   name="fechaHasta"
+                                                   value="<%= typeof fechaHasta !== 'undefined' ? fechaHasta : '' %>"
+                                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bee-yellow focus:border-bee-yellow transition-colors"
+                                                   required>
+                                        </div>
+                                        <div class="flex space-x-2">
+                                            <button type="submit" 
+                                                    class="bg-bee-yellow hover:bg-bee-orange text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center">
+                                                <i class="fas fa-search mr-2"></i>
+                                                Buscar
+                                            </button>
+                                            <% if (typeof filtrado !== 'undefined' && filtrado) { %>
+                                                <a href="/dashboard" 
+                                                   class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center">
+                                                    <i class="fas fa-times mr-2"></i>
+                                                    Limpiar
+                                                </a>
+                                            <% } %>
+                                        </div>
+                                    </form>
+                                    
+                                    <!-- Mostrar información del filtro activo -->
+                                    <% if (typeof filtrado !== 'undefined' && filtrado) { %>
+                                        <div class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex items-center">
+                                                    <i class="fas fa-filter text-blue-600 mr-2"></i>
+                                                    <span class="text-sm font-medium text-blue-800">
+                                                        Filtro activo: <%= fechaDesde %> al <%= fechaHasta %>
+                                                    </span>
+                                                </div>
+                                                <div class="text-sm text-blue-700">
+                                                    <span class="font-medium"><%= totalResultados.mensajes %></span> mensajes, 
+                                                    <span class="font-medium"><%= totalResultados.alertas %></span> alertas
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Stats Grid -->
                         <div class="px-4 sm:px-0">
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -965,6 +1038,101 @@
                     </div>
                 </div>
             `;
+                        }
+
+                        // Funcionalidad de búsqueda por fechas
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const fechaDesde = document.getElementById('fechaDesde');
+                            const fechaHasta = document.getElementById('fechaHasta');
+                            
+                            // Establecer valores predeterminados si no hay filtro activo
+                            <% if (typeof filtrado === 'undefined' || !filtrado) { %>
+                                // Establecer fecha "desde" como 7 días atrás
+                                const hoy = new Date();
+                                const hace7Dias = new Date(hoy);
+                                hace7Dias.setDate(hoy.getDate() - 7);
+                                
+                                if (fechaDesde && !fechaDesde.value) {
+                                    fechaDesde.value = hace7Dias.toISOString().split('T')[0];
+                                }
+                                
+                                if (fechaHasta && !fechaHasta.value) {
+                                    fechaHasta.value = hoy.toISOString().split('T')[0];
+                                }
+                            <% } %>
+                            
+                            // Validación de fechas
+                            if (fechaDesde && fechaHasta) {
+                                fechaDesde.addEventListener('change', function() {
+                                    if (fechaHasta.value && fechaDesde.value > fechaHasta.value) {
+                                        alert('La fecha "desde" no puede ser posterior a la fecha "hasta"');
+                                        fechaDesde.value = '';
+                                    }
+                                });
+                                
+                                fechaHasta.addEventListener('change', function() {
+                                    if (fechaDesde.value && fechaHasta.value < fechaDesde.value) {
+                                        alert('La fecha "hasta" no puede ser anterior a la fecha "desde"');
+                                        fechaHasta.value = '';
+                                    }
+                                    
+                                    // No permitir fechas futuras
+                                    const hoy = new Date().toISOString().split('T')[0];
+                                    if (fechaHasta.value > hoy) {
+                                        alert('No se pueden seleccionar fechas futuras');
+                                        fechaHasta.value = hoy;
+                                    }
+                                });
+                                
+                                // Establecer fecha máxima como hoy
+                                const hoy = new Date().toISOString().split('T')[0];
+                                fechaDesde.max = hoy;
+                                fechaHasta.max = hoy;
+                            }
+                            
+                            // Agregar botones de rango rápido
+                            agregarBotonesRangoRapido();
+                        });
+                        
+                        function agregarBotonesRangoRapido() {
+                            const form = document.querySelector('form[action="/dashboard/buscar"]');
+                            if (!form) return;
+                            
+                            const botonesContainer = document.createElement('div');
+                            botonesContainer.className = 'flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-200';
+                            botonesContainer.innerHTML = `
+                                <p class="text-sm font-medium text-gray-700 w-full mb-2">Rangos rápidos:</p>
+                                <button type="button" onclick="setRangoRapido(1)" class="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">Último día</button>
+                                <button type="button" onclick="setRangoRapido(7)" class="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">Última semana</button>
+                                <button type="button" onclick="setRangoRapido(15)" class="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">Últimos 15 días</button>
+                                <button type="button" onclick="setRangoRapido(30)" class="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">Último mes</button>
+                                <button type="button" onclick="setRangoRapido(90)" class="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">Últimos 3 meses</button>
+                            `;
+                            
+                            form.appendChild(botonesContainer);
+                        }
+                        
+                        function setRangoRapido(dias) {
+                            const fechaDesde = document.getElementById('fechaDesde');
+                            const fechaHasta = document.getElementById('fechaHasta');
+                            
+                            if (!fechaDesde || !fechaHasta) return;
+                            
+                            const hoy = new Date();
+                            const fechaInicio = new Date(hoy);
+                            fechaInicio.setDate(hoy.getDate() - dias + 1); // +1 para incluir el día actual
+                            
+                            fechaDesde.value = fechaInicio.toISOString().split('T')[0];
+                            fechaHasta.value = hoy.toISOString().split('T')[0];
+                            
+                            // Resaltar los campos brevemente para mostrar el cambio
+                            fechaDesde.classList.add('ring-2', 'ring-bee-yellow');
+                            fechaHasta.classList.add('ring-2', 'ring-bee-yellow');
+                            
+                            setTimeout(() => {
+                                fechaDesde.classList.remove('ring-2', 'ring-bee-yellow');
+                                fechaHasta.classList.remove('ring-2', 'ring-bee-yellow');
+                            }, 1000);
                         }
                     </script>
 </body>

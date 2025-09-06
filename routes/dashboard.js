@@ -689,4 +689,331 @@ async function getLatestTemperatureData(userId) {
   }
 }
 
+// GET /dashboard/buscar - Búsqueda por rango de fechas
+router.get('/buscar', async (req, res) => {
+  try {
+    const userId = req.session.user.id;
+    const { fechaDesde, fechaHasta } = req.query;
+    
+    // Validar fechas
+    if (!fechaDesde || !fechaHasta) {
+      return res.redirect('/dashboard?error=Debe+especificar+ambas+fechas');
+    }
+
+    const fechaInicio = new Date(fechaDesde);
+    const fechaFin = new Date(fechaHasta);
+    fechaFin.setHours(23, 59, 59, 999); // Incluir todo el día final
+
+    if (fechaInicio > fechaFin) {
+      return res.redirect('/dashboard?error=La+fecha+desde+debe+ser+anterior+a+la+fecha+hasta');
+    }
+
+    // Obtener estadísticas básicas del usuario (sin filtro de fecha)
+    const [colmenasCount, estacionesCount] = await Promise.all([
+      prisma.colmena.count({
+        where: { dueno: userId }
+      }),
+      prisma.estacion.count({
+        where: { dueno: userId }
+      })
+    ]);
+
+    // Obtener datos filtrados por fecha
+    const [
+      alertasPorTipo,
+      nodosPorTipo,
+      mensajesFiltrados,
+      alertasFiltradas,
+      colmenasData,
+      estacionesData,
+      datosTemperaturaColmenas
+    ] = await Promise.all([
+      // Alertas por tipo - filtradas por fecha
+      prisma.nodo_alerta.findMany({
+        where: {
+          fecha: {
+            gte: fechaInicio,
+            lte: fechaFin
+          },
+          nodo: {
+            OR: [
+              {
+                nodo_colmena: {
+                  some: {
+                    colmena: {
+                      dueno: userId
+                    }
+                  }
+                }
+              },
+              {
+                nodo_estacion: {
+                  some: {
+                    estacion: {
+                      dueno: userId
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        include: {
+          alerta: true,
+          nodo: {
+            include: {
+              nodo_colmena: {
+                include: {
+                  colmena: true
+                }
+              },
+              nodo_estacion: {
+                include: {
+                  estacion: true
+                }
+              }
+            }
+          }
+        }
+      }),
+
+      // Nodos por tipo - del usuario actual (sin filtro de fecha)
+      prisma.nodo.findMany({
+        where: {
+          OR: [
+            {
+              nodo_colmena: {
+                some: {
+                  colmena: {
+                    dueno: userId
+                  }
+                }
+              }
+            },
+            {
+              nodo_estacion: {
+                some: {
+                  estacion: {
+                    dueno: userId
+                  }
+                }
+              }
+            }
+          ]
+        },
+        include: {
+          nodo_tipo: true,
+          nodo_colmena: {
+            include: {
+              colmena: true
+            }
+          },
+          nodo_estacion: {
+            include: {
+              estacion: true
+            }
+          }
+        }
+      }),
+
+      // Mensajes filtrados por fecha
+      prisma.nodo_mensaje.findMany({
+        where: {
+          fecha: {
+            gte: fechaInicio,
+            lte: fechaFin
+          },
+          nodo: {
+            OR: [
+              {
+                nodo_colmena: {
+                  some: {
+                    colmena: {
+                      dueno: userId
+                    }
+                  }
+                }
+              },
+              {
+                nodo_estacion: {
+                  some: {
+                    estacion: {
+                      dueno: userId
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        orderBy: {
+          fecha: 'desc'
+        }
+      }),
+
+      // Alertas filtradas por fecha
+      prisma.nodo_alerta.findMany({
+        where: {
+          fecha: {
+            gte: fechaInicio,
+            lte: fechaFin
+          },
+          nodo: {
+            OR: [
+              {
+                nodo_colmena: {
+                  some: {
+                    colmena: {
+                      dueno: userId
+                    }
+                  }
+                }
+              },
+              {
+                nodo_estacion: {
+                  some: {
+                    estacion: {
+                      dueno: userId
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        include: {
+          alerta: true
+        },
+        orderBy: {
+          fecha: 'desc'
+        }
+      }),
+
+      // Datos de colmenas del usuario
+      prisma.colmena.findMany({
+        where: { dueno: userId },
+        include: {
+          nodo_colmena: {
+            include: {
+              nodo: {
+                include: {
+                  nodo_tipo: true
+                }
+              }
+            }
+          }
+        }
+      }),
+
+      // Datos de estaciones del usuario
+      prisma.estacion.findMany({
+        where: { dueno: userId },
+        include: {
+          nodo_estacion: {
+            include: {
+              nodo: {
+                include: {
+                  nodo_tipo: true
+                }
+              }
+            }
+          }
+        }
+      }),
+
+      // Obtener datos de temperatura más recientes para cada colmena
+      getLatestTemperatureData(userId)
+    ]);
+
+    // Procesar datos para gráficos de visualización
+    const chartData = {
+      alertasPorTipo: processAlertasPorTipo(alertasPorTipo),
+      nodosPorTipo: processNodosPorTipo(nodosPorTipo, userId),
+      mensajesPorDia: processMensajesPorDiaPersonalizado(mensajesFiltrados, fechaInicio, fechaFin),
+      alertasPorDia: processAlertasPorDiaPersonalizado(alertasFiltradas, fechaInicio, fechaFin),
+      distribucionNodos: processDistribucionNodos(colmenasData, estacionesData),
+      temperaturasColmenas: processTemperaturasColmenas(datosTemperaturaColmenas)
+    };
+
+    res.render('dashboard/index', {
+      title: 'Dashboard de Visualización - Smart Bee',
+      colmenasCount,
+      estacionesCount,
+      alertasCount: alertasFiltradas.length,
+      mensajesCount: mensajesFiltrados.length,
+      chartData: JSON.stringify(chartData),
+      colmenasInfo: datosTemperaturaColmenas,
+      filtrado: true,
+      fechaDesde,
+      fechaHasta,
+      totalResultados: {
+        mensajes: mensajesFiltrados.length,
+        alertas: alertasFiltradas.length
+      }
+    });
+
+  } catch (error) {
+    console.error('Error en búsqueda por fechas:', error);
+    res.redirect('/dashboard?error=Error+al+procesar+la+búsqueda');
+  }
+});
+
+// Función auxiliar para procesar mensajes por día con rango personalizado
+function processMensajesPorDiaPersonalizado(mensajes, fechaInicio, fechaFin) {
+  const mensajesPorDia = {};
+  
+  // Inicializar todos los días en el rango
+  const fechaActual = new Date(fechaInicio);
+  while (fechaActual <= fechaFin) {
+    const fechaStr = fechaActual.toISOString().split('T')[0];
+    mensajesPorDia[fechaStr] = 0;
+    fechaActual.setDate(fechaActual.getDate() + 1);
+  }
+
+  // Contar mensajes por día
+  mensajes.forEach(mensaje => {
+    const fechaStr = mensaje.fecha.toISOString().split('T')[0];
+    if (mensajesPorDia.hasOwnProperty(fechaStr)) {
+      mensajesPorDia[fechaStr]++;
+    }
+  });
+
+  return {
+    labels: Object.keys(mensajesPorDia).map(fecha => {
+      const date = new Date(fecha);
+      return date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
+    }),
+    data: Object.values(mensajesPorDia)
+  };
+}
+
+// Función auxiliar para procesar alertas por día con rango personalizado
+function processAlertasPorDiaPersonalizado(alertas, fechaInicio, fechaFin) {
+  const alertasPorDia = {};
+  
+  // Inicializar todos los días en el rango
+  const fechaActual = new Date(fechaInicio);
+  while (fechaActual <= fechaFin) {
+    const fechaStr = fechaActual.toISOString().split('T')[0];
+    alertasPorDia[fechaStr] = 0;
+    fechaActual.setDate(fechaActual.getDate() + 1);
+  }
+
+  // Contar alertas por día
+  alertas.forEach(alerta => {
+    const fechaStr = alerta.fecha.toISOString().split('T')[0];
+    if (alertasPorDia.hasOwnProperty(fechaStr)) {
+      alertasPorDia[fechaStr]++;
+    }
+  });
+
+  return {
+    labels: Object.keys(alertasPorDia).map(fecha => {
+      const date = new Date(fecha);
+      return date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
+    }),
+    data: Object.values(alertasPorDia)
+  };
+}
+
 module.exports = router;
